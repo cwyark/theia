@@ -38,7 +38,6 @@ export namespace TaskTerminalWidget {
 }
 
 export interface TaskTerminalWidgetOpenerOptions extends WidgetOpenerOptions {
-    taskId?: number;
     taskConfig?: TaskConfiguration;
     taskInfo?: TaskInfo;
 }

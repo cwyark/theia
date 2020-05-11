@@ -1079,7 +1079,6 @@ export class TaskService implements TaskConfigurationClient {
                 : `Task: #${taskId}`,
             destroyTermOnClose: true
         }, {
-            taskId,
             widgetOptions: { area: 'bottom' },
             mode: widgetOpenMode,
             taskInfo
