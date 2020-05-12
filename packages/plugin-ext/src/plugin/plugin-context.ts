@@ -140,13 +140,14 @@ import { ConnectionExtImpl } from './connection-ext';
 import { TasksExtImpl } from './tasks/tasks';
 import { DebugExtImpl } from './node/debug/debug';
 import { FileSystemExtImpl } from './file-system';
-import { QuickPick, QuickPickItem } from '@theia/plugin';
+import { QuickPick, QuickPickItem, TimelineItem } from '@theia/plugin';
 import { ScmExtImpl } from './scm';
 import { DecorationProvider, LineChange } from '@theia/plugin';
 import { DecorationsExtImpl } from './decorations';
 import { TextEditorExt } from './text-editor';
 import { ClipboardExt } from './clipboard-ext';
 import { WebviewsExtImpl } from './webviews';
+import { TimelineExtImpl } from '@theia/plugin-ext/lib/plugin/timeline';
 
 export function createAPIFactory(
     rpc: RPCProtocol,
@@ -179,6 +180,7 @@ export function createAPIFactory(
     const fileSystemExt = rpc.set(MAIN_RPC_CONTEXT.FILE_SYSTEM_EXT, new FileSystemExtImpl(rpc));
     const scmExt = rpc.set(MAIN_RPC_CONTEXT.SCM_EXT, new ScmExtImpl(rpc, commandRegistry));
     const decorationsExt = rpc.set(MAIN_RPC_CONTEXT.DECORATIONS_EXT, new DecorationsExtImpl(rpc));
+    const timelineExt = rpc.set(MAIN_RPC_CONTEXT.TIMELINE_EXT, new TimelineExtImpl(rpc));
     rpc.set(MAIN_RPC_CONTEXT.DEBUG_EXT, debugExt);
 
     return function (plugin: InternalPlugin): typeof theia {
@@ -489,6 +491,9 @@ export function createAPIFactory(
             },
             onWillRenameFile(listener, thisArg?, disposables?): theia.Disposable {
                 return workspaceExt.onWillRenameFile(listener, thisArg, disposables);
+            },
+            registerTimelineProvider(scheme: string | string[], provider: theia.TimelineProvider): theia.Disposable {
+                return timelineExt.registerTimelineProvider(scheme, provider);
             }
         };
 
@@ -869,7 +874,8 @@ export function createAPIFactory(
             CommentMode,
             CallHierarchyItem,
             CallHierarchyIncomingCall,
-            CallHierarchyOutgoingCall
+            CallHierarchyOutgoingCall,
+            TimelineItem
         };
     };
 }
